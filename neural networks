@@ -1,1 +1,100 @@
+import random
 
+# IMPLEMENT THE STEP FUNCTION
+
+def step_function(x1, x2, w1, w2, wb):
+
+"""A step activation function for a perceptron with two inputs
+Arguments:
+- x1, x2: the values for the two inputs;
+- w1, w2: the weights of the two inputs;
+- wb: the bias weight.
+Returns:
+- 1 if the sum of the products of the inputs and their weights is *greater or equal* t
+o 0;
+- 0 otherwise."""
+
+weighted_sum = x1*w1 + x2*w2 + wb
+if weighted_sum >= 0:
+output = 1
+else:
+output = 0
+return(output)
+
+# IMPLEMENT THE UPDATE RULE
+
+def update_rule(perceptron_state, expected_output, learning_rate):
+
+""""Implements the perceptron update rule
+Arguments:
+- perceptron_state: a list consisting of the inputs, the input weights, and the bias w
+eight;
+- expected_output: the expected output;
+- learning_rate: the learning rate.
+Returns:
+- a list with the updated state of the perceptron
+- the actual output according to the step function"""
+x1=perceptron_state[0]
+x2=perceptron_state[1]
+x1, x2, w1, w2, wb = perceptron_state
+output = step_function(x1, x2, w1, w2, wb)
+error = expected_output - output
+w1 = w1 + (error*learning_rate)*x1
+w2 = w2 + (error*learning_rate)*x2
+wb = wb + (error*learning_rate)
+return([x1, x2, w1, w2, wb], output)
+
+
+# THE LEARNING ALGORITHM 
+
+def perceptron_learning_algorithm(training_examples, learning_rate, epochs, verbosity=0):
+
+for epoch in range(epochs):
+# each epoch involves all training examples (also known as a batch), but in a random order
+
+random.shuffle(training_examples)
+
+# at the first epoch, we need to initialize the perceptron with zero weights
+
+if epoch == 0:
+if verbosity>0:
+print("Initializing perceptron state with zero input signals and weights")
+perceptron_state = [0, 0, 0, 0, 0]
+accuracy = [] # keep track of the accuracy of the perceptron for each batch
+
+if verbosity>0:
+print("Epoch {:0d}".format(epoch))
+for example in training_examples:
+x1, x2, y = example # 'unpack' the example
+
+# set the values for the inputs
+
+perceptron_state[0] = x1
+perceptron_state[1] = x2
+if verbosity >= 2:
+print("x1 : {:.2f}, x2: {:.2f}, w1: {:.2f}, w2: {:.2f}, wb: {:.2f}, y: {:d} ".form
+
+at(*perceptron_state, y))
+
+# run the update rule and extract the new state of the perceptron and the actual output
+
+perceptron_state, yhat = update_rule(perceptron_state, y, learning_rate)
+if verbosity >= 2:
+print("output: {:d}".format(yhat))
+
+# append the current accuracy to the list
+accuracy.append(yhat==y)
+
+# compute the error rate for the current batch
+error_rate = 1-sum(accuracy)/len(accuracy)
+
+if verbosity >= 1:
+print("error rate: {:.2f}".format(error_rate))
+if error_rate == 0:
+if verbosity >0:
+print("Perceptron converged")
+break
+
+# return the final state of the perceptron, the error rate, and the number of epochs
+
+return(perceptron_state, error_rate, epoch)
