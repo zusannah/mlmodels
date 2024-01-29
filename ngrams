@@ -31,3 +31,20 @@ for ngram, frequency in fd.items():
 pd[ngram]=fd[ngram]/total
 
 return(pd)
+
+CALCULATING PROBABILITIES FOR NEW LANGUAGES
+
+pc3g = ngram_model(poirot_characters, 3)
+pc3gs = sorted(pc3g.items(), key=lambda x: x[1], reverse=True)
+print("Poirot:")
+for i in pc3gs[:10]:
+print(i)
+pa3g = ngram_model(pauline_characters, 3)
+pa3gs = sorted(pa3g.items(), key=lambda x: x[1], reverse=True)
+print("Pauline:")
+for i in pa3gs[:10]:
+print(i)
+
+
+english_model = ngram_model(poirot_characters, 3)
+french_model = ngram_model(pauline_characters, 3)
