@@ -1,0 +1,33 @@
+CALCULATING PROBABILITIES OF N-GRAMS
+
+def ngram_model(sequence, n):
+
+"""Construct a dictionary with n-grams as keys and their probabilities as values.
+Arguments:
+sequence: a sequence (e.g., a string or list)
+n: the size of the n-grams
+Returns: a dictionary with n-grams as keys and their probabilities as values.
+"""
+# create a frequency dictionary
+
+fd={}
+# create a probability dictionary
+
+pd={}
+
+# compute all the n-grams from the `sequence` string
+
+ngram_sequence = ngrams(sequence, n)
+
+# fill the frequency dictionary
+
+for ngram in ngram_sequence:
+fd[ngram]=fd.get(ngram, 0)+1
+
+# transform the frequencies to probabilities
+total=sum(fd.values()) # sum of frequencies
+
+for ngram, frequency in fd.items():
+pd[ngram]=fd[ngram]/total
+
+return(pd)
